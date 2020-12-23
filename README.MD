@@ -47,7 +47,7 @@ module.exports = { handler }
 ```
 
 ## How it works
-The middleware will startup beeline-node-js with the options you configure before your handler runs, create a trace, and add any of the header context you supplied. It adds the `beeline` instance to the handler.event so you can use it in your function- add spans, more context, etc.
+The middleware will startup [Beeline for  Nodejs](https://docs.honeycomb.io/getting-data-in/javascript/beeline-nodejs) with the options you configure before your handler runs, create a trace, and add any of the header context you supplied. It adds the `beeline` instance to the handler.event so you can use it in your function- add spans, more context, etc.
 
 Once your handler is done, the middleware will close the trace and run a `beeline.flush()` to make sure all the events are sent.
 
