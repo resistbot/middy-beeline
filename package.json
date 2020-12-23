@@ -1,0 +1,41 @@
+{
+  "name": "middy-beeline",
+  "version": "0.1.0",
+  "description": "Middy Middleware for Honeycomb Beeline",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write **/*.js",
+    "test": "jest --verbose false ",
+    "test:all": "npm run test:format && npm run test:lint && npm run test",
+    "test:audit": "npm audit --audit-level=moderate",
+    "test:format": "prettier --list-different **/*.js",
+    "test:sls": "API_KEYS=ABCDEFG12345 sls invoke local -f searchDistrict -p testreqest.json",
+    "test:lint": "eslint . --format junit -o reports/junit/js-lint-results.xml",
+    "test:watch": "jest --watch --verbose false"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resistbot/middy-beeline.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/resistbot/middy-beeline/issues"
+  },
+  "homepage": "https://github.com/resistbot/middy-beeline#readme",
+  "dependencies": {
+    "honeycomb-beeline": "^2.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.15.0",
+    "lodash": "^4.17.20",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "jest": "^26.6.3",
+    "jest-junit": "^12.0.0",
+    "nock": "^13.0.5",
+    "prettier": "^2.2.1"
+  }
+}

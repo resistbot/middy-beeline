@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+.vscode
+
+# package directories
+node_modules
+jspm_packages
+data-conversion/node_modules
+
+# Serverless directories
+.serverless
+
+# Config
+local*.json
+
+# Tests
+coverage
+reports
+junit.xml
+
+# GeoJson Files
+data-conversion/districts
+data-conversion/openstates-geo
+data-conversion/pretar
+data-conversion/states
+
