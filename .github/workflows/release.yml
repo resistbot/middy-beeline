@@ -26,4 +26,4 @@ jobs:
           npm install
       - name: Release
         run: |
-          npm publish .
+          npm publish --access=public
