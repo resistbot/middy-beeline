@@ -18,9 +18,4 @@ coverage
 reports
 junit.xml
 
-# GeoJson Files
-data-conversion/districts
-data-conversion/openstates-geo
-data-conversion/pretar
-data-conversion/states
 
