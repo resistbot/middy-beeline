@@ -5,11 +5,11 @@ Middy middleware for instrumenting with [Honeycomb](https://honeycomb.io).
 
 ## Getting Started
 
-Installing `middy-beeline`
+Installing `@resistbot/middy-beeline`
 
 ```bash
 npm install --save middy # You need middy installed
-npm install --save middy-beeline
+npm install --save @resistbot/middy-beeline
 ```
 
 Running the tests
@@ -20,7 +20,7 @@ npm test
 ## Usage
 
 ```javascript
-const middyBeeline = require('middy-beeline')
+const middyBeeline = require('@resistbot/middy-beeline')
 const middy = require('middy')
 
 const someHandler = (event, context, callback) => {
