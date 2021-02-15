@@ -1,36 +1,31 @@
 const middy = require('middy');
-const beelineMiddlewareFactory = require('.');
+const middyBeeline = require('.');
 
 describe('middy-beeline', () => {
-  it('should extract keys', (done) => {
-    const handler = middy((event, context, callback) => {
-      callback(null, event.extracted);
-    });
+    it('should extract keys', (done) => {
+        const handler = middy((event, context, callback) => {
+            callback(null, event.extracted);
+        });
 
-    handler.use(
-      beelineMiddlewareFactory({
-        writeKey: 'key',
-        serviceName: 'myService',
-        dataset: 'myDataset',
-      }),
-    );
+        handler.use(
+            middyBeeline({
+                writeKey: 'key',
+                serviceName: 'myService',
+                dataset: 'myDataset',
+            }),
+        );
 
-    const event = {
-      requestContext: {
-        authorizer: {
-          claims: {
-            gender: 'male',
-            'cognito:username': 'banglin',
-          },
-        },
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    handler(event, null, (err) => {
-      expect(err).toBe(null);
-      done();
+        const event = {
+            requestContext: {
+                
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        handler(event, null, (err) => {
+            expect(err).toBe(null);
+            done();
+        });
     });
-  });
 });
