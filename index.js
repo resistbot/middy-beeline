@@ -1,26 +1,22 @@
 let HC_INIT = false;
 
-const setopts = (opts) => {
-  const defaults = {
-    writeKey: 'null',
-    serviceName: '',
-    dataset: 'test',
-    sampleRate: 10,
-    headerContext: [],
-    errorMessageContext: 'error_message',
-  };
-
-  const options = { ...defaults, ...opts };
-  return options;
+const defaults = {
+  writeKey: 'null',
+  serviceName: '',
+  dataset: 'test',
+  sampleRate: 10,
+  headerContext: [],
+  errorMessageContext: 'error_message',
 };
-module.exports = (opts) => ({
-  before: (handler, next) => {
-    const options = setopts(opts);
 
+const honeycombMiddleware = (opts = {}) => {
+  const options = { ...defaults, ...opts };
+
+  const honeycombMiddlewareBefore = (request) => {
     if (!HC_INIT) {
       if (options.samplerHook) {
         // eslint-disable-next-line no-param-reassign, global-require
-        handler.event.beeline = require('honeycomb-beeline')({
+        request.event.beeline = require('honeycomb-beeline')({
           writeKey: options.writeKey,
           samplerHook: options.samplerHook,
           serviceName: options.serviceName,
@@ -28,7 +24,7 @@ module.exports = (opts) => ({
         });
       } else {
         // eslint-disable-next-line no-param-reassign, global-require
-        handler.event.beeline = require('honeycomb-beeline')({
+        request.event.beeline = require('honeycomb-beeline')({
           writeKey: options.writeKey,
           sampleRate: options.sampleRate,
           serviceName: options.serviceName,
@@ -38,37 +34,42 @@ module.exports = (opts) => ({
       HC_INIT = true;
     } else {
       // eslint-disable-next-line no-param-reassign, global-require
-      handler.event.beeline = require('honeycomb-beeline')();
+      request.event.beeline = require('honeycomb-beeline')();
     }
     // eslint-disable-next-line no-param-reassign
-    handler.event.trace = handler.event.beeline.startTrace();
+    request.event.trace = request.event.beeline.startTrace();
 
     options.headerContext.forEach((head) => {
       const { header, contextname } = head;
-      if (handler.event.headers[header]) {
-        handler.event.beeline.addContext({
-          [contextname]: handler.event.headers[header],
+      if (request.event.headers[header]) {
+        request.event.beeline.addContext({
+          [contextname]: request.event.headers[header],
         });
       }
     });
-    return next();
-  },
-  after: (handler, next) => {
-    handler.event.beeline.finishTrace(handler.event.trace);
-    handler.event.beeline.flush();
-    return next();
-  },
-  onError: (handler, next) => {
-    const options = setopts(opts);
-    if (handler.event.beeline) {
-      handler.event.beeline.addContext({
-        error: true,
-        [options.errorMessageContext]: handler.error.toString(),
-      });
-      handler.event.beeline.finishTrace(handler.event.trace);
-      handler.event.beeline.flush();
-    }
+  };
 
-    return next(handler.error);
-  },
-});
+  const honeycombMiddlewareAfter = (request) => {
+    request.event.beeline.finishTrace(request.event.trace);
+    request.event.beeline.flush();
+  };
+
+  const honeycombMiddlewareOnError = (request) => {
+    if (request.event.beeline) {
+      request.event.beeline.addContext({
+        error: true,
+        [options.errorMessageContext]: request.error.toString(),
+      });
+      request.event.beeline.finishTrace(request.event.trace);
+      request.event.beeline.flush();
+    }
+  };
+
+  return {
+    before: honeycombMiddlewareBefore,
+    after: honeycombMiddlewareAfter,
+    onError: honeycombMiddlewareOnError,
+  };
+};
+
+module.exports = honeycombMiddleware;

@@ -1,10 +1,10 @@
 {
   "name": "@resistbot/middy-beeline",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Middy Middleware for Honeycomb Beeline",
   "main": "index.js",
   "engines": {
-    "node": ">=8.3.0"
+    "node": ">=12.13.0"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -42,5 +42,8 @@
     "middy": "^0.36.0",
     "nock": "^13.1.1",
     "prettier": "^2.3.2"
+  },
+  "peerDependencies": {
+    "@middy/core": "^2.0.0"
   }
 }
