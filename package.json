@@ -1,6 +1,6 @@
 {
   "name": "@resistbot/middy-beeline",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Middy Middleware for Honeycomb Beeline",
   "main": "index.js",
   "engines": {
