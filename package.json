@@ -42,5 +42,8 @@
     "middy": "^0.36.0",
     "nock": "^13.1.1",
     "prettier": "^2.3.2"
+  },
+  "peerDependencies": {
+    "@middy/core": "^2.0.0"
   }
 }
