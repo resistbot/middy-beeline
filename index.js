@@ -1,21 +1,16 @@
 let HC_INIT = false;
 
-const setopts = (opts) => {
-  const defaults = {
-    writeKey: 'null',
-    serviceName: '',
-    dataset: 'test',
-    sampleRate: 10,
-    headerContext: [],
-    errorMessageContext: 'error_message',
-  };
-
-  const options = { ...defaults, ...opts };
-  return options;
+const defaults = {
+  writeKey: 'null',
+  serviceName: '',
+  dataset: 'test',
+  sampleRate: 10,
+  headerContext: [],
+  errorMessageContext: 'error_message',
 };
 
-const honeycombMiddleware = (opts) => {
-  const options = setopts(opts);
+const honeycombMiddleware = (opts = {}) => {
+  const options = { ...defaults, ...opts };
 
   const honeycombMiddlewareBefore = (request) => {
     if (!HC_INIT) {
