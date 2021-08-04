@@ -1,19 +1,13 @@
-const middy = require('middy');
 const middyBeeline = require('.');
 
 describe('middy-beeline', () => {
-  it('should extract keys', (done) => {
-    const handler = middy((event, context, callback) => {
-      callback(null, event.extracted);
+  it('should extract keys', () => {
+    const middleware = middyBeeline({
+      writeKey: 'key',
+      serviceName: 'myService',
+      dataset: 'myDataset',
+      samplerHook: () => false,
     });
-
-    handler.use(
-      middyBeeline({
-        writeKey: 'key',
-        serviceName: 'myService',
-        dataset: 'myDataset',
-      }),
-    );
 
     const event = {
       requestContext: {},
@@ -21,9 +15,7 @@ describe('middy-beeline', () => {
         'Content-Type': 'application/json',
       },
     };
-    handler(event, null, (err) => {
-      expect(err).toBe(null);
-      done();
-    });
+    const request = { event };
+    middleware.before(request);
   });
 });
