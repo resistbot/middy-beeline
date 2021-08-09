@@ -1,3 +1,5 @@
+const beeline = require('honeycomb-beeline');
+
 let HC_INIT = false;
 
 const defaults = {
@@ -12,31 +14,13 @@ const defaults = {
 const honeycombMiddleware = (opts = {}) => {
   const options = { ...defaults, ...opts };
 
-  const honeycombMiddlewareBefore = (request) => {
+  const honeycombMiddlewareBefore = async (request) => {
     if (!HC_INIT) {
-      if (options.samplerHook) {
-        // eslint-disable-next-line no-param-reassign, global-require
-        request.event.beeline = require('honeycomb-beeline')({
-          writeKey: options.writeKey,
-          samplerHook: options.samplerHook,
-          serviceName: options.serviceName,
-          dataset: options.dataset,
-        });
-      } else {
-        // eslint-disable-next-line no-param-reassign, global-require
-        request.event.beeline = require('honeycomb-beeline')({
-          writeKey: options.writeKey,
-          sampleRate: options.sampleRate,
-          serviceName: options.serviceName,
-          dataset: options.dataset,
-        });
-      }
+      request.event.beeline = beeline(options);
       HC_INIT = true;
     } else {
-      // eslint-disable-next-line no-param-reassign, global-require
-      request.event.beeline = require('honeycomb-beeline')();
+      request.event.beeline = beeline();
     }
-    // eslint-disable-next-line no-param-reassign
     request.event.trace = request.event.beeline.startTrace();
 
     options.headerContext.forEach((head) => {
@@ -49,19 +33,17 @@ const honeycombMiddleware = (opts = {}) => {
     });
   };
 
-  const honeycombMiddlewareAfter = (request) => {
+  const honeycombMiddlewareAfter = async (request) => {
     request.event.beeline.finishTrace(request.event.trace);
-    request.event.beeline.flush();
   };
 
-  const honeycombMiddlewareOnError = (request) => {
+  const honeycombMiddlewareOnError = async (request) => {
     if (request.event.beeline) {
       request.event.beeline.addContext({
         error: true,
         [options.errorMessageContext]: request.error.toString(),
       });
       request.event.beeline.finishTrace(request.event.trace);
-      request.event.beeline.flush();
     }
   };
 
