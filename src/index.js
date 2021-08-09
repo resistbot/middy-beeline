@@ -35,6 +35,7 @@ const honeycombMiddleware = (opts = {}) => {
 
   const honeycombMiddlewareAfter = async (request) => {
     request.event.beeline.finishTrace(request.event.trace);
+    request.event.beeline.flush();
   };
 
   const honeycombMiddlewareOnError = async (request) => {
@@ -44,6 +45,7 @@ const honeycombMiddleware = (opts = {}) => {
         [options.errorMessageContext]: request.error.toString(),
       });
       request.event.beeline.finishTrace(request.event.trace);
+      request.event.beeline.flush();
     }
   };
 
