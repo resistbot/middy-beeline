@@ -15,5 +15,10 @@ describe('middleware', () => {
     middleware.before(request);
     expect(request.event.beeline).toBeDefined();
     expect(request.event.trace).toBe('FAKE TRACE');
+
+    // Second call should have it already init'd
+    middleware.before(request);
+    expect(request.event.beeline).toBeDefined();
+    expect(request.event.trace).toBe('FAKE TRACE');
   });
 });

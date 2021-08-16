@@ -1,5 +1,3 @@
-const beeline = require('honeycomb-beeline');
-
 let HC_INIT = false;
 
 const defaults = {
@@ -16,10 +14,22 @@ const honeycombMiddleware = (opts = {}) => {
 
   const honeycombMiddlewareBefore = async (request) => {
     if (!HC_INIT) {
-      request.event.beeline = beeline(options);
+      // eslint-disable-next-line no-console
+      console.log('Initializing beeline', {
+        ...options,
+        ...{ writeKey: options.writeKey.slice(0, 4) },
+      });
+      // eslint-disable-next-line global-require
+      request.event.beeline = require('honeycomb-beeline')(options);
       HC_INIT = true;
     } else {
-      request.event.beeline = beeline();
+      // eslint-disable-next-line no-console
+      console.log('Initializing beeline, already init', {
+        ...options,
+        ...{ writeKey: options.writeKey.slice(0, 4) },
+      });
+      // eslint-disable-next-line global-require
+      request.event.beeline = require('honeycomb-beeline')();
     }
     request.event.trace = request.event.beeline.startTrace();
 
